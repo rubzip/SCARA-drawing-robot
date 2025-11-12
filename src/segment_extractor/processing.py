@@ -78,3 +78,22 @@ def simplify_segments(segments: list[Segment], eps: float = 2.) -> list[Segment]
     simplified_segments = [simplify_segment(s, eps) for s in segments]
     filtered_segments = [s for s in simplified_segments if s is not None and len(s) >= 2]
     return filtered_segments
+
+def normalize_segments(segments: list[Segment]) -> list[Segment]:
+    min_x = min(min(p.x for p in s) for s in segments)
+    min_y = min(min(p.y for p in s) for s in segments)
+    max_x = max(max(p.x for p in s) for s in segments)
+    max_y = max(max(p.y for p in s) for s in segments)
+
+    w = max(max_x - min_x, max_y - min_y)
+
+    normalized = []
+    for s in segments:
+        new_segment = []
+        for p in s:
+            x = (p.x - min_x) / w
+            y = (p.y - min_y) / w
+            new_segment.append(Point(x, y))
+        normalized.append(new_segment)
+
+    return normalized
