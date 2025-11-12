@@ -1,10 +1,11 @@
-import streamlit as st
-import matplotlib.pyplot as plt
-import numpy as np
 from io import BytesIO
 import tempfile
 import json
 from pathlib import Path
+
+import streamlit as st
+import matplotlib.pyplot as plt
+import numpy as np
 
 from io_img import load_img, save_segment_image
 from processing import get_border_points, points_to_segments_kdtree, simplify_segments
@@ -49,7 +50,7 @@ if uploaded_file:
         json_data = json.dumps(json_obj)
 
         st.download_button(
-            label="💾 Descargar fichero JSON",
+            label="💾 Download JSON",
             data=json_data,
             file_name="segments.json",
             mime="application/json"
