@@ -1,5 +1,15 @@
 from models import Segment
-from processing import compute_weight_matrix
+
+def compute_weight_matrix(segments: list[Segment]) -> list[list[float]]:
+    n = len(segments)
+    matrix = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        intial_p = segments[i].last()
+        for j in range(n):
+            if i != j:
+                final_p = segments[j].first()
+                matrix[i][j] = intial_p.distance(final_p)
+    return matrix
 
 def greedy_tsp(weight_matrix: tuple[tuple[int]], start: int = 0) -> list[int]:
     n = len(weight_matrix)
