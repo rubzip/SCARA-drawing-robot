@@ -1,4 +1,4 @@
-from io_img import load_segment_image
+from models import Segment
 from processing import compute_weight_matrix
 
 def greedy_tsp(weight_matrix: tuple[tuple[int]], start: int = 0) -> list[int]:
@@ -24,3 +24,8 @@ def greedy_tsp(weight_matrix: tuple[tuple[int]], start: int = 0) -> list[int]:
         path.append(best_i)
     
     return path
+
+def sort_segments(segments: list[Segment], tsp_algorithm: callable = greedy_tsp):
+    w = compute_weight_matrix(segments)
+    path = tsp_algorithm(w)
+    return [segments[i] for i in path]
