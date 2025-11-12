@@ -87,13 +87,9 @@ def normalize_segments(segments: list[Segment]) -> list[Segment]:
 
     w = max(max_x - min_x, max_y - min_y)
 
-    normalized = []
-    for s in segments:
-        new_segment = []
-        for p in s:
-            x = (p.x - min_x) / w
-            y = (p.y - min_y) / w
-            new_segment.append(Point(x, y))
-        normalized.append(new_segment)
-
-    return normalized
+    return [
+        Segment([
+            Point((p.x - min_x) / w, (p.y - min_y) / w) 
+            for p in s
+        ]) for s in segments
+    ]
