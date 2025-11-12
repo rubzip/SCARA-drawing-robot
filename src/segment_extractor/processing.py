@@ -48,7 +48,7 @@ def simplify_segment(segment: Segment, eps: float = 2.) -> Segment:
     if len(segment) < 2:
         return None
 
-    coords = np.array([[p.x, p.y] for p in segment.points])
+    coords = np.array([[p.x, p.y] for p in segment])
     def _rdp(points: np.ndarray):
         dmax = 0.0
         index = 0
