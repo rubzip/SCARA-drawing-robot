@@ -1,0 +1,86 @@
+from typing import List
+from models import Point, Segment
+
+from scipy.spatial import KDTree
+import numpy as np
+import cv2
+
+def get_border_points(img: np.ndarray, threshold_1: float, threshold_2: float) -> List[Point]:
+    blurred = cv2.GaussianBlur(img, (5, 5), 0)
+    edges = cv2.Canny(blurred, threshold_1, threshold_2)
+    coords = np.column_stack(np.where(edges > 0))
+    points = [Point(float(x), float(y)) for y, x in coords]
+    return points
+
+def points_to_segments_kdtree(points: List[Point], distance_threshold: float = 5) -> List[Segment]:
+    if not points:
+        return []
+
+    unvisited = set(points)
+    segments = []
+
+    coords = np.array([(p.x, p.y) for p in points])
+    point_map = {(p.x, p.y): p for p in points}
+    kdtree = KDTree(coords)
+
+    while unvisited:
+        current = unvisited.pop()
+        segment_points = [current]
+
+        for _ in range(2):
+            segment_points = segment_points[::-1]
+            while True:
+                idx_neighbors = kdtree.query_ball_point([segment_points[-1].x, segment_points[-1].y], distance_threshold)
+                neighbors = [point_map[tuple(coords[i])] for i in idx_neighbors if point_map[tuple(coords[i])] in unvisited]
+                if not neighbors:
+                    break
+                next_point = min(neighbors, key=lambda q: segment_points[-1].distance(q))
+                segment_points.append(next_point)
+                unvisited.remove(next_point)
+
+        segments.append(Segment(segment_points))
+
+    return segments
+
+def simplify_segment(segment: Segment, eps: float = 2.) -> Segment:
+    """Ramer-Douglas-Peucker algorithm implementation"""
+
+    if len(segment) <= 2:
+        return segment
+
+    coords = np.array([[p.x, p.y] for p in segment.points])
+    def _rdp(points: np.ndarray):
+        dmax = 0.0
+        index = 0
+        start, end = points[0], points[-1]
+        for i in range(1, len(points) - 1):
+            p = points[i]
+            d = np.abs(np.cross(end - start, start - p)) / np.linalg.norm(end - start)
+            if d > dmax:
+                index = i
+                dmax = d
+        if dmax > eps:
+            rec1 = _rdp(points[:index+1])
+            rec2 = _rdp(points[index:])
+            return np.vstack((rec1[:-1], rec2))
+        else:
+            return np.vstack((start, end))
+
+    rdp_coords = _rdp(coords)
+    simplified_points = [Point(float(x), float(y)) for x, y in rdp_coords]
+
+    return Segment(simplified_points)
+
+def simplify_segments(segments: list[Segment]) -> list[Segment]:
+    return [simplify_segment(s) for s in segments]
+
+def compute_weight_matrix(segments: list[Segment]) -> list[list[float]]:
+    n = len(segments)
+    matrix = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        intial_p = segments[i].last()
+        for j in range(n):
+            if i != j:
+                final_p = segments[j].first()
+                matrix[i][j] = intial_p.distance(final_p)
+    return matrix
