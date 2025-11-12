@@ -46,7 +46,10 @@ def simplify_segment(segment: Segment, eps: float = 2.) -> Segment:
     """Ramer-Douglas-Peucker algorithm implementation"""
 
     if len(segment) <= 2:
-        return segment
+        first, last = segment.first(), segment.last()
+        if first.distance(last) >= eps:
+            return segment
+        return None
 
     coords = np.array([[p.x, p.y] for p in segment.points])
     def _rdp(points: np.ndarray):
