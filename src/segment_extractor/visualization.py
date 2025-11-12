@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
-from typing import List
 from models import Segment
 
-def plot_segments(segments: List[Segment], figsize=(10,10)):
+def plot_segments(segments: list[Segment], figsize=(10,10)):
     fig, ax = plt.subplots(figsize=figsize)
     ax.set_aspect("equal")
     ax.invert_yaxis()

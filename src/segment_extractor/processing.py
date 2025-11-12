@@ -1,18 +1,17 @@
-from typing import List
-from models import Point, Segment
-
 from scipy.spatial import KDTree
 import numpy as np
 import cv2
 
-def get_border_points(img: np.ndarray, threshold_1: float, threshold_2: float) -> List[Point]:
+from models import Point, Segment
+
+def get_border_points(img: np.ndarray, threshold_1: float, threshold_2: float) -> list[Point]:
     blurred = cv2.GaussianBlur(img, (5, 5), 0)
     edges = cv2.Canny(blurred, threshold_1, threshold_2)
     coords = np.column_stack(np.where(edges > 0))
     points = [Point(float(x), float(y)) for y, x in coords]
     return points
 
-def points_to_segments_kdtree(points: List[Point], distance_threshold: float = 5) -> List[Segment]:
+def points_to_segments_kdtree(points: list[Point], distance_threshold: float = 5) -> list[Segment]:
     if not points:
         return []
 

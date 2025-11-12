@@ -1,12 +1,13 @@
-import cv2
 import json
+
+import cv2
 from pathlib import Path
-from typing import List
-from models import Point, Segment
 import numpy as np
 
-def load_img(path: str | Path) -> np.ndarray:
-    img = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
+from models import Point, Segment
+
+def load_img(path: str) -> np.ndarray:
+    img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     if img is None:
         raise FileNotFoundError(f"Error: {path}")
     return img
