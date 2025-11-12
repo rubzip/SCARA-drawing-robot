@@ -78,14 +78,3 @@ def simplify_segments(segments: list[Segment], eps: float = 2.) -> list[Segment]
     simplified_segments = [simplify_segment(s, eps) for s in segments]
     filtered_segments = [s for s in simplified_segments if s is not None and len(s) >= 2]
     return filtered_segments
-
-def compute_weight_matrix(segments: list[Segment]) -> list[list[float]]:
-    n = len(segments)
-    matrix = [[0.0] * n for _ in range(n)]
-    for i in range(n):
-        intial_p = segments[i].last()
-        for j in range(n):
-            if i != j:
-                final_p = segments[j].first()
-                matrix[i][j] = intial_p.distance(final_p)
-    return matrix
