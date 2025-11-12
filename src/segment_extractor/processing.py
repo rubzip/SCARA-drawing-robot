@@ -44,11 +44,8 @@ def points_to_segments_kdtree(points: List[Point], distance_threshold: float = 5
 
 def simplify_segment(segment: Segment, eps: float = 2.) -> Segment:
     """Ramer-Douglas-Peucker algorithm implementation"""
-
-    if len(segment) <= 2:
-        first, last = segment.first(), segment.last()
-        if first.distance(last) >= eps:
-            return segment
+    
+    if len(segment) < 2:
         return None
 
     coords = np.array([[p.x, p.y] for p in segment.points])
@@ -71,11 +68,16 @@ def simplify_segment(segment: Segment, eps: float = 2.) -> Segment:
 
     rdp_coords = _rdp(coords)
     simplified_points = [Point(float(x), float(y)) for x, y in rdp_coords]
+    simplified_segment = Segment(simplified_points)
 
-    return Segment(simplified_points)
-
-def simplify_segments(segments: list[Segment]) -> list[Segment]:
-    return [simplify_segment(s) for s in segments]
+    if len(simplified_segment) == 2 and simplified_segment.first().distance(simplified_segment.last()) < eps:
+        return None
+    return simplified_segment
+    
+def simplify_segments(segments: list[Segment], eps: float = 2.) -> list[Segment]:
+    simplified_segments = [simplify_segment(s, eps) for s in segments]
+    filtered_segments = [s for s in simplified_segments if s is not None and len(s) >= 2]
+    return filtered_segments
 
 def compute_weight_matrix(segments: list[Segment]) -> list[list[float]]:
     n = len(segments)
