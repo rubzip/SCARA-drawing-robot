@@ -10,6 +10,7 @@ import numpy as np
 from io_img import load_img, save_segment_image
 from processing import get_border_points, points_to_segments_kdtree, simplify_segments
 from visualization import plot_segments
+from sort_routes import sort_segments
 
 st.set_page_config(page_title="Segment Generator", layout="wide")
 st.title("Segment Generator for SCARA drawing")
@@ -46,7 +47,8 @@ if uploaded_file:
         fig = plot_segments(simple_segments, (10, 10))
         st.pyplot(fig)
 
-        json_obj = [s.to_json() for s in simple_segments]
+        sorted_segments = sort_segments(simple_segments)
+        json_obj = [s.to_json() for s in sorted_segments]
         json_data = json.dumps(json_obj)
 
         st.download_button(
