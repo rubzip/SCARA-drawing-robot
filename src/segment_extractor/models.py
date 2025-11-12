@@ -29,3 +29,6 @@ class Segment:
     
     def __len__(self) -> float:
         return len(self.points)
+
+    def __iter__(self):
+        return iter(self.points)
