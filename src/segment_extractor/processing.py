@@ -5,13 +5,15 @@ import cv2
 from models import Point, Segment
 
 def get_border_points(img: np.ndarray, threshold_1: float, threshold_2: float) -> list[Point]:
+    """Extract border points from a grayscale image using Canny edge detection"""
     blurred = cv2.GaussianBlur(img, (5, 5), 0)
     edges = cv2.Canny(blurred, threshold_1, threshold_2)
     coords = np.column_stack(np.where(edges > 0))
     points = [Point(float(x), float(y)) for y, x in coords]
     return points
 
-def points_to_segments_kdtree(points: list[Point], distance_threshold: float = 5) -> list[Segment]:
+def points_to_segments(points: list[Point], distance_threshold: float = 5) -> list[Segment]:
+    """Convert list of points to segments based on proximity using KDTree"""
     if not points:
         return []
 
@@ -73,17 +75,19 @@ def simplify_segment(segment: Segment, eps: float = 2.) -> Segment:
         return None
     return simplified_segment
     
-def simplify_segments(segments: list[Segment], eps: float = 2.) -> list[Segment]:
+def simplify_segments(segments: list[Segment], eps: float = 2., normalize: bool = False) -> list[Segment]:
     simplified_segments = [simplify_segment(s, eps) for s in segments]
     filtered_segments = [s for s in simplified_segments if s is not None and len(s) >= 2]
+    if normalize:
+        return normalize_segments(filtered_segments)
     return filtered_segments
 
 def normalize_segments(segments: list[Segment]) -> list[Segment]:
+    """Transform segments to fit within a unit square (conserving aspect ratio)"""
     min_x = min(min(p.x for p in s) for s in segments)
     min_y = min(min(p.y for p in s) for s in segments)
     max_x = max(max(p.x for p in s) for s in segments)
     max_y = max(max(p.y for p in s) for s in segments)
-
     w = max(max_x - min_x, max_y - min_y)
 
     return [
