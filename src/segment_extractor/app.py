@@ -12,9 +12,7 @@ from sorting import sort_segments
 st.set_page_config(page_title="Segment Generator", layout="wide")
 st.title("Segment Generator for SCARA drawing")
 
-uploaded_file = st.file_uploader(
-    "Upload your image:", type=["jpg", "jpeg", "png", "bmp"]
-)
+uploaded_file = st.file_uploader("Upload your image:", type=["jpg", "jpeg", "png", "bmp"])
 
 if uploaded_file:
     tmp_path = Path(tempfile.gettempdir()) / uploaded_file.name
@@ -44,11 +42,12 @@ if uploaded_file:
         st.subheader("Extracted Segments")
         segments = points_to_segments(border_points, distance_threshold=dist_threshold)
         st.write(f"{len(segments)} segments")
+        fig = plot_segments(segments, (10, 10))
+        st.pyplot(fig)
 
         simple_segments = simplify_segments(segments, eps=eps, normalize=normalize_json)
         st.write(f"{sum(len(s) for s in simple_segments)} simplified points")
         st.write(f"{len(simple_segments)} simplified segments")
-
         fig = plot_segments(simple_segments, (10, 10))
         st.pyplot(fig)
 
