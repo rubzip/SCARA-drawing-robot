@@ -10,9 +10,9 @@ $$M(q_1, q_2, q_3) = \left[\begin{matrix}\cos{\left(q_{1} + q_{2} \right)} & \si
 
 The homogeneous form of the effector position is defined by:
 
-$
+$$
 \tilde{p} = M(q_1, q_2, q_3)  \begin{bmatrix} 0 \\ 0 \\ 0 \\ 1 \end{bmatrix} = \left[\begin{matrix}a_{1} \cos{\left(q_{1} \right)} + a_{2} \cos{\left(q_{1} + q_{2} \right)}\\- a_{1} \sin{\left(q_{1} \right)} - a_{2} \sin{\left(q_{1} + q_{2} \right)}\\q_{3}\\1\end{matrix}\right]
-$
+$$
 
 After obtaining the position of the effector is possible to compute the jacobian of the system:
 
