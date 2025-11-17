@@ -21,7 +21,7 @@ if __name__ == "__main__":
     a1, a2, q1, q2, q3 = sp.symbols("a1 a2 q1 q2 q3")
     q = [q1, q2, q3]
 
-    m = rz(q1) * tx(a1) * rz(q2) * tx(a2) * tz(q3)
+    m = sp.simplify(rz(q1) * tx(a1) * rz(q2) * tx(a2) * tz(q3))
 
     edge = sp.Matrix([0, 0, 0, 1]) 
     p = sp.simplify((m @ edge))[:3, :]
