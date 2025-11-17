@@ -6,7 +6,7 @@ Here we define the mathematic formulation of a RRT Scara robot with arm sizes $a
 
 $M(q_1, q_2, q_3) = R_z(q_1)T_x(a_1)R_z(q_2)T_x(a_2)T_z(q_3)$
 
-$M(q_1, q_2, q_3) = \left[\begin{matrix}\cos{\left(q_{1} + q_{2} \right)} & \sin{\left(q_{1} + q_{2} \right)} & 0 & a_{1} \cos{\left(q_{1} \right)} + a_{2} \cos{\left(q_{1} + q_{2} \right)}\\- \sin{\left(q_{1} + q_{2} \right)} & \cos{\left(q_{1} + q_{2} \right)} & 0 & - a_{1} \sin{\left(q_{1} \right)} - a_{2} \sin{\left(q_{1} + q_{2} \right)}\\0 & 0 & 1 & q_{3}\\0 & 0 & 0 & 1\end{matrix}\right]$
+$$M(q_1, q_2, q_3) = \left[\begin{matrix}\cos{\left(q_{1} + q_{2} \right)} & \sin{\left(q_{1} + q_{2} \right)} & 0 & a_{1} \cos{\left(q_{1} \right)} + a_{2} \cos{\left(q_{1} + q_{2} \right)}\\- \sin{\left(q_{1} + q_{2} \right)} & \cos{\left(q_{1} + q_{2} \right)} & 0 & - a_{1} \sin{\left(q_{1} \right)} - a_{2} \sin{\left(q_{1} + q_{2} \right)}\\0 & 0 & 1 & q_{3}\\0 & 0 & 0 & 1\end{matrix}\right]$$
 
 The homogeneous form of the effector position is defined by:
 
@@ -30,7 +30,7 @@ And the inverse as:
 
 $$
 J^{-1} = \frac{1}{a_1a_2\sin(q_2)}\begin{bmatrix}
-\cos(q_1+q_2) & -\sin(q_1+q_2) & 0 \\
+\cos(q_1+q_2) & -\sin(q_1+q_2) & 0 \\ 
 -a_1\cos(q_1) -a_2\cos(q_1+q_2) & a_1\sin(q_1)+a_2\sin(q_1+q_2) & 0 \\
 0 & 0 & a_1a_2\sin(q_2) \\
 \end{bmatrix}
