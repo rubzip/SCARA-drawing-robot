@@ -1,75 +1,78 @@
+import math as m
+import numpy as np
 import pygame
-import math
-from models import ScaraArm
-from constants import CENTER, LENGTH_1, LENGTH_2
+import sys
 
-# --- Configuración ---
-WIDTH, HEIGHT = 800, 600
-FPS = 60
-SCALE = 100
-COLOR = (0, 0, 255)
+from .constants import WIDTH, HEIGHT, L1, L2, CENTER, MAX_R
+from .models import ScaraSimulator
 
-# --- Inicializar Pygame ---
+
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("SCARA Robot Simulation")
 clock = pygame.time.Clock()
-font = pygame.font.SysFont("Arial", 18)
 
-# --- Instancia del brazo ---
-arm = ScaraArm(LENGTH_1, LENGTH_2)
+sim = ScaraSimulator(L1, L2, center=CENTER)
+is_running = False
 
-# --- Función para transformar coordenadas matemáticas a pantalla ---
-def to_screen(pos):
-    x, y = pos
-    return int(WIDTH / 2 + x * SCALE), int(HEIGHT / 2 - y * SCALE)
+target = list(CENTER)
+sim.set_target(target)
 
-# --- Loop principal ---
-running = True
-while running:
-    clock.tick(FPS)
-    screen.fill((30, 30, 30))
+font = pygame.font.SysFont(None, 28)
 
-    # --- Manejo de eventos ---
+while True:
+    dt = clock.get_time() / 1000
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            pygame.quit()
+            sys.exit()
 
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                is_running = not is_running
+            if event.key == pygame.K_r:
+                sim.reset()
+                target = list(CENTER)
+                sim.set_target(target)
+
+    # Move target with arrows
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_a]:
-        arm.rotate_part_1(True)
-    if keys[pygame.K_d]:
-        arm.rotate_part_1(False)
-    if keys[pygame.K_w]:
-        arm.rotate_part_2(True)
-    if keys[pygame.K_s]:
-        arm.rotate_part_2(False)
+    speed = 200 * dt
+    if keys[pygame.K_UP]: target[1] -= speed
+    if keys[pygame.K_DOWN]: target[1] += speed
+    if keys[pygame.K_LEFT]: target[0] -= speed
+    if keys[pygame.K_RIGHT]: target[0] += speed
 
-    # --- Obtener posiciones ---
-    (x1, y1), (x2, y2) = arm.get_vertex_positions(CENTER)
-    base_pos = to_screen(CENTER)
-    joint1_pos = to_screen((x1, y1))
-    end_pos = to_screen((x2, y2))
+    # Limit target inside circle
+    dx = target[0] - CENTER[0]
+    dy = target[1] - CENTER[1]
+    dist = m.hypot(dx, dy)
+    if dist > MAX_R:
+        target[0] = CENTER[0] + dx * MAX_R / dist
+        target[1] = CENTER[1] + dy * MAX_R / dist
 
-    # --- Dibujar brazo ---
-    pygame.draw.line(screen, COLOR, base_pos, joint1_pos, 5)
-    pygame.draw.line(screen, COLOR, joint1_pos, end_pos, 5)
-    pygame.draw.circle(screen, COLOR, base_pos, 8)
-    pygame.draw.circle(screen, COLOR, joint1_pos, 8)
-    pygame.draw.circle(screen, COLOR, end_pos, 8)
+    sim.set_target(tuple(target))
 
-    # --- Dibujar info de vértices ---
-    info_lines = [
-        f"Base: {CENTER}",
-        f"Joint1: ({x1:.2f}, {y1:.2f})",
-        f"End Effector: ({x2:.2f}, {y2:.2f})",
-        f"Angles: θ1={math.degrees(arm.angle_1):.1f}°, θ2={math.degrees(arm.angle_2):.1f}°"
-    ]
-    for i, line in enumerate(info_lines):
-        text = font.render(line, True, (255, 255, 255))
-        screen.blit(text, (10, 10 + i * 20))
+    if is_running:
+        sim.update(dt)
 
-    # --- Actualizar pantalla ---
+    screen.fill((25, 25, 25))
+
+    # Draw arm
+    (x1, y1), (x2, y2) = sim.get_vertices()
+    pygame.draw.line(screen, (180, 180, 180), CENTER, (x1, y1), 5)
+    pygame.draw.line(screen, (100, 180, 255), (x1, y1), (x2, y2), 5)
+    pygame.draw.circle(screen, (255, 255, 255), CENTER, 10)
+    pygame.draw.circle(screen, (255, 255, 0), (int(x1), int(y1)), 8)
+    pygame.draw.circle(screen, (0, 255, 255), (int(x2), int(y2)), 10)
+
+    # Draw target
+    pygame.draw.circle(screen, (255, 0, 0), (int(target[0]), int(target[1])), 10)
+
+    # UI
+    screen.blit(font.render(f"SPACE = Run/Pause  |  State: {'RUNNING' if is_running else 'STOPPED'}", True, (255,255,255)), (20,20))
+    screen.blit(font.render("Arrow keys = Move target", True, (255,255,255)), (20,50))
+    screen.blit(font.render("R = Reset", True, (255,255,255)), (20,80))
+
     pygame.display.flip()
-
-pygame.quit()
+    clock.tick(60)
