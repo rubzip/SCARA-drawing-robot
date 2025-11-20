@@ -2,4 +2,4 @@ WIDTH, HEIGHT = 900, 700
 L1, L2 = 180, 180
 CENTER = (WIDTH // 2, HEIGHT // 2)
 MAX_R = L1 + L2
-
+MAX_W1, MAX_W2 = 3., 3.
