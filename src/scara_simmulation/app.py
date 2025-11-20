@@ -3,7 +3,7 @@ import numpy as np
 import pygame
 import sys
 
-from .constants import WIDTH, HEIGHT, L1, L2, CENTER, MAX_R
+from .constants import WIDTH, HEIGHT, L1, L2, CENTER, MAX_R, MAX_W1, MAX_W2
 from .models import ScaraSimulator
 
 
@@ -11,7 +11,7 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
-sim = ScaraSimulator(L1, L2, center=CENTER)
+sim = ScaraSimulator(L1, L2, center=CENTER, max_w1=MAX_W1, max_w2=MAX_W2)
 is_running = False
 
 target = list(CENTER)
