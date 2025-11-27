@@ -71,16 +71,13 @@ class ScaraKinmeatics:
                 raise
         return J_inv
 
-    def get_q_dot(self, desired_p: np.ndarray, current_q: np.ndarray = None, k: float = 1., normalize: bool = False) -> np.ndarray:
+    def get_q_dot(self, p_dot: np.ndarray, current_q: np.ndarray = None, normalize: bool = False) -> np.ndarray:
         """Computes joint velocities q_dot to move towards desired end-effector position."""
         q = self.__get_q(current_q)
-        self.__validate_input(desired_p)
+        self.__validate_input(p_dot)
 
         J_inv = self.get_inverse_jacobian(q)
-        current_p = self.get_p(q)
-        p_dot = (desired_p - current_p) * k
         q_dot = J_inv @ p_dot
-
         if normalize and self.q_dot_max is not None:
             q_dot = self.__scale(q_dot, self.q_dot_max)
         return q_dot

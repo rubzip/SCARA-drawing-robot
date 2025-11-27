@@ -6,6 +6,8 @@ import sys
 from .constants import WIDTH, HEIGHT, L1, L2, CENTER, MAX_R, MAX_W1, MAX_W2
 from .models import ScaraSimulator
 
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -60,14 +62,14 @@ while True:
 
     # Draw arm
     (x1, y1), (x2, y2) = sim.get_vertices()
-    pygame.draw.line(screen, (180, 180, 180), CENTER, (x1, y1), 5)
-    pygame.draw.line(screen, (100, 180, 255), (x1, y1), (x2, y2), 5)
-    pygame.draw.circle(screen, (255, 255, 255), CENTER, 10)
-    pygame.draw.circle(screen, (255, 255, 0), (int(x1), int(y1)), 8)
-    pygame.draw.circle(screen, (0, 255, 255), (int(x2), int(y2)), 10)
+    pygame.draw.line(screen, WHITE, CENTER, (x1, y1), 5)
+    pygame.draw.line(screen, WHITE, (x1, y1), (x2, y2), 5)
+    pygame.draw.circle(screen, WHITE, CENTER, 10)
+    pygame.draw.circle(screen, WHITE, (int(x1), int(y1)), 8)
+    pygame.draw.circle(screen, WHITE, (int(x2), int(y2)), 10)
 
     # Draw target
-    pygame.draw.circle(screen, (255, 0, 0), (int(target[0]), int(target[1])), 10)
+    pygame.draw.circle(screen, RED, (int(target[0]), int(target[1])), 10)
 
     # UI
     screen.blit(font.render(f"SPACE = Run/Pause  |  State: {'RUNNING' if is_running else 'STOPPED'}", True, (255,255,255)), (20,20))

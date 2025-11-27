@@ -69,7 +69,10 @@ class ScaraSimulator:
         q1, q2 = self.arm.get_q()
         self.kinematics.set_measurements(q1=q1, q2=q2)
 
-        q_dot = self.kinematics.get_q_dot(desired_p, k=k, normalize=True)
+        current_p = self.kinematics.get_p()
+        desired_p_dot = desired_p - current_p
+        
+        q_dot = self.kinematics.get_q_dot(desired_p_dot, normalize=True)
         w1, w2 = q_dot[0,0], q_dot[1,0]
         self.arm.rotate(w1, w2, dt)
 
