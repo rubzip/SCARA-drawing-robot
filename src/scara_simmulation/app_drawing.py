@@ -16,6 +16,8 @@ RED = (255, 0, 0)
 BG = (25, 25, 25)
 BLUE = (0, 0, 122)
 
+SPEED_MULT = 1.0
+
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("SCARA Drawer - non-interactive demo")
@@ -61,9 +63,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    drawer.update(dt)
+    drawer.update(dt * SPEED_MULT)
 
     screen.fill(BG)
+    BUTTON_RECT = pygame.Rect(10, 120, 100, 30)
+    pygame.draw.rect(screen, (100, 100, 255), BUTTON_RECT)
+    screen.blit(font.render("Faster", True, WHITE), (15, 125))
+
 
     (x1, y1), (x2, y2) = sim.get_vertices()
     if drawer.is_drawing():
@@ -100,7 +106,16 @@ while running:
     pygame.display.flip()
 
     if not drawer.has_finished():
-        drawing_time += dt
+        drawing_time += dt * SPEED_MULT
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if BUTTON_RECT.collidepoint(event.pos):
+                SPEED_MULT *= 2
+                if SPEED_MULT > 16:
+                    SPEED_MULT = 16
 
 
 pygame.quit()
