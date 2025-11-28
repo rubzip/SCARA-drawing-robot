@@ -1,6 +1,6 @@
 import numpy as np
 
-class ScaraKinmeatics:
+class ScaraKinematics:
     """SCARA Arm 3DOF. Movement: Rz(q1)Tx(a1)Rz(q2)Tx(a2)Tz(q3)"""
     def __init__(self, a1: float, a2: float, q: np.ndarray, q_dot_max: np.ndarray = None):
         self.__validate_input(q)

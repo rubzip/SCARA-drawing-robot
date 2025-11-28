@@ -1,7 +1,8 @@
 import math as m
+import sys
+
 import numpy as np
 import pygame
-import sys
 
 from .constants import WIDTH, HEIGHT, L1, L2, CENTER, MAX_R, MAX_W1, MAX_W2
 from .models import ScaraSimulator
