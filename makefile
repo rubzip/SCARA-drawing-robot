@@ -6,9 +6,7 @@ ACTIVATE = . $(VENV_DIR)/bin/activate
 venv:
 	python3 -m venv $(VENV_DIR)
 	$(PIP) install --upgrade pip
-	$(PIP) install -r requiFILE ?=
-	run_drawing:
-		$(PYTHON) -m src.scara_simmulation.app_drawing $(FILE)rements.txt
+	$(PIP) install -r requirements.txt
 
 activate:
 	$(ACTIVATE)
