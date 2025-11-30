@@ -65,7 +65,7 @@ class ScaraSimulator:
         """Sets a new target position for the end-effector."""
         self.target = pos
 
-    def update(self, dt: float = 0.016, k: float = 1.0):
+    def update(self, dt: float = 0.016):
         """Updates the arm position towards the target using controller."""
         if self.target_is_achieved():
             return

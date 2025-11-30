@@ -1,6 +1,5 @@
 import sys
 import math as m
-import json
 from pathlib import Path
 
 import numpy as np
@@ -17,6 +16,7 @@ BG = (25, 25, 25)
 BLUE = (0, 0, 122)
 
 SPEED_MULT = 1.0
+EPS = 2.
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -41,14 +41,14 @@ if segments is None:
         [[-0.5, 0.0], [0.0, -1.0], [0.5, 0.0]],
         [[0.25, -0.5], [-0.25, -0.5]],
     ]
-
-x_min = CENTER[0]
-x_max = CENTER[0] + MAX_R / m.sqrt(2)
-y_min = CENTER[1]
-y_max = CENTER[1] + MAX_R / m.sqrt(2)
+circunscribed_square = MAX_R / m.sqrt(2)
+x_min = CENTER[0] - circunscribed_square
+x_max = CENTER[0] + circunscribed_square
+y_min = CENTER[1] - circunscribed_square
+y_max = CENTER[1] + circunscribed_square
 
 segments_norm = normalize_segments(segments, x_min, x_max, y_min, y_max)
-drawer = Drawer(simulator=sim, segments=segments_norm)
+drawer = Drawer(simulator=sim, segments=segments_norm, eps=EPS)
 
 trace_segments = []
 current_segment = []

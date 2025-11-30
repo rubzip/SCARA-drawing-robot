@@ -22,4 +22,3 @@ run_follower:
 FILE ?=
 run_drawing:
 	$(PYTHON) -m src.scara_simmulation.app_drawing $(FILE)
-

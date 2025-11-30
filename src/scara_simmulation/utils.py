@@ -45,7 +45,7 @@ def normalize_segments(segments: list[list[list[float, float]]], x_min: float, x
     return normalized
 
 class Drawer:
-    def __init__(self, simulator: ScaraSimulator, segments: list[list[list[float, float]]]):
+    def __init__(self, simulator: ScaraSimulator, segments: list[list[list[float, float]]], eps: float = 1.):
         self.simulator = simulator
         self.segments = segments
 
@@ -57,6 +57,8 @@ class Drawer:
 
         point = self.segments[self.current_segment][self.current_point]
         self.simulator.set_target(point)
+
+        self.eps = eps
 
     def _set_next_target(self):
         if self._has_finished:
@@ -79,7 +81,7 @@ class Drawer:
 
     def update(self, dt: float = 0.016):
         self.simulator.update(dt)
-        if self.simulator.target_is_achieved(1):
+        if self.simulator.target_is_achieved(self.eps):
             self._set_next_target()
 
     def get_vertices(self) -> tuple[tuple[float, float], tuple[float, float]]:
