@@ -9,6 +9,9 @@ Run the script:
 ```bash
 make run_drawing FILE=segments.json
 ```
+![Image 1](imgs/scara-1.png)
+![Image 2](imgs/scara-2.png)
+![Image 3](imgs/scara-3.png)
 Enjoy!
 
 
