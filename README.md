@@ -5,6 +5,8 @@ make run_segment_extractor
 ```
 Upload an image, set the parameters, extract the path points and download the `segments.json`.
 ![Image 1](imgs/smile.jpg)
+![Image 1](imgs/segment_extractor.png)
+![Image 1](imgs/segments.png)
 ## Activate the robot
 Run the script:
 ```bash
