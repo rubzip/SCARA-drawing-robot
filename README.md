@@ -1,4 +1,16 @@
 # SCARA-drawing-robot
+## Define the path
+```bash
+make run_segment_extractor
+```
+Upload an image, set the parameters, extract the path points and download the `segments.json`.
+## Activate the robot
+Run the script:
+```bash
+make run_drawing FILE=segments.json
+```
+Enjoy!
+
 
 ## Kinematics derivation
 
